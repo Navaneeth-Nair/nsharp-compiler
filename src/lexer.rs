@@ -1,4 +1,4 @@
-use std::dmt::(Display, Formatter,);
+use std::dmt::(Display, Formatter);
 
 use crate::text::span::TextSpan;
 
@@ -49,6 +49,7 @@ pub enum TokenKind{
     Continue,
     Null,
     Eof,
+    Error
 }
 
 impl Display for TokenKind{

@@ -1,3 +1,4 @@
+mod lexer;
 
 fn main() {
     let s1: &str = "World";
