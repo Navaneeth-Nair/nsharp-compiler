@@ -1,6 +1,6 @@
 use nsharp_compiler::bug;
 
-#[derive(Debug,Clone, PartiakEq,Eq)]
+#[derive(Debug,Clone, PartialEq,Eq)]
 pub struct TextSpan{
     pub start: usize,
     pub end: usize,
@@ -21,7 +21,6 @@ impl TextSpan{
             bug!("Cannot Combine Empty Spans")
         }
         spans.sort_by(|a,b| a.start.cmp(&b.start))
-
         let start = spans.first().unwrap().start;
         let end = spans.end().unwrap().end;
 
