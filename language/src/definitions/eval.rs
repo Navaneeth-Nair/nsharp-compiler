@@ -78,3 +78,66 @@ impl Frames{
         None
     }
 }
+
+#[derive[Debug,Clone,Copy,PartialEq]]
+
+pub enum Value{
+    Number(i64),
+    Boolean(bool),
+    Function(FunctionIdx),
+}
+
+impl Value{
+    pub fn expect_boolean(&self) -> bool{
+        match self{
+            Value::Boolean(value) => *value,
+            _ => panic!("Expected a boolean expression"),   
+        }
+    }
+
+    pub fn expect_number(&self) -> i64 {
+        match self {
+            Value::Number(value) => *value,
+            _ => panic!("Expected a Integer Expression"),
+        }
+    }
+
+    pub fn expect_function(&self) -> FunctionIdx{
+        match self {
+            Value::Function(value) => *value,
+            _ => panic!("Expexted a Function Expression")
+        }
+    }
+}
+
+pub struct ASTEval<'a>{
+    pub last_value: Option<Value>,
+    pub frames : Frames,
+    pub global_scope: &'a GlobalScope
+}
+
+impl<'a> ASTEval<'a>{
+    pub fn new(global_scope: &'a GlobalScope) -> Self{
+        Self{
+            last_value: None,
+            frames: Frames::new(),
+            global_scope,  
+        }
+    }
+
+    fn push_frame(&mut self){
+        self.frames.push();
+
+    }
+
+    fn pop_frame(&mut self){
+        self.frames.pop();
+    }
+
+    fn expect_last_value(&self) -> Value{
+        *self
+        .last_value
+        .as_ref()
+        .expect("expected last value to be set")
+    }
+}
