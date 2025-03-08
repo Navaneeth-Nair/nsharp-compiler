@@ -5,7 +5,7 @@ use navsharp::Idx;
 use crate::{
     definitions::{
         visitor::ASTVisitor, AssignExpr, Ast, BinOpKind, BinaryExpr, BlockExpr, Body, BoolExpr,
-        CallExpr, Expr, FunctionDeclaration, IfExpr, ItemId, LetStmt, NumberExpr,
+        CallExpr, Expr, FuncDeclaration, IfExpr, ItemId, LetStmt, NumberExpr,
         ParenthesizedExpr, Stmt, UnOpKind, UnaryExpr, VarExpr, WhileStmt,
     },
     compilation_unit::{FunctionIdx, GlobalScope, VariableIdx},
