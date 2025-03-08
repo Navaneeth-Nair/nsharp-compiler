@@ -1,4 +1,4 @@
-use crate{::ast{
+use crate{::definitions{
     AssignExpr,Ast, BinaryExpr, BlockExpr, Body, BoolExpr, CallExpr,Expr, ExprId, ExprKind, FuncDeclaration,IfExpr,
     ItemId,ItemKind, LetStmt, NumberExpr, ParenthesizedExpr, ReturnStmt, Stmt, StmtId,  StmtKind, UnaryExpr, VarExpr,
     WhileStmt 
