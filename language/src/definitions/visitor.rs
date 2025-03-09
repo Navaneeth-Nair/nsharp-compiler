@@ -50,8 +50,8 @@ fn visit_return_statement(&mut self, ast:&mut Ast, returnstmt: &ReturnStmt){
 }
 
 fn visit_while_statement(&mut self, ast: &mut Ast, whilestmt: &WhileStmt){
-    self.visit_expression(ast, whilestmt.condition);
-    self.visit_body(ast, &whilestmt.body);
+    self.visit_expression(ast, whileStmt.condition);
+    self.visit_body(ast, &whileStmt.body);
 }
 
 fn visit_block_expr(&mut self, ast: &mut Ast, blockexpr: &BlockExpr, _expr: &Expr){

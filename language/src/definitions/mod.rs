@@ -10,7 +10,7 @@ use termion::color::{Fg, Reset};
 use visitor::ASTVisitor;
 
 use crate::{
-    ast::lexer::token,
+    ast::lexer::Token,
     compilation_unit{FunctionIdx, VariableIdx},
     text:span::TextSpan,
     typecheck::Type,
@@ -115,9 +115,68 @@ impl Ast{
         self.stmt_of_kind(StmtKind::Expr(exprid));
     }
 
-    pub fn let_statement(&mut self, identifier: token, initializer: ExprID, type_annotation: Option<StaticTypeAnnotation>)  -> &Stmt{
+    pub fn let_statement(&mut self, identifier: Token, initializer: ExprID, type_annotation: Option<StaticTypeAnnotation>)  -> &Stmt{
         self.stmt_of_kind(StmtKind::Let(LetStmt{identifier,initializer,type_annotation,variable_idx: VariableIdx::new(0)}))
     }
 
+    pub fn if_expression(&mut self, if_keyword: Token, condition: ExprID, then: Body, else_branch: Option<ElseBranch>,) -> &Expr{
+        self.expr_from_kind(ExprKind::if(ifexpr{if_keyword, condition,body,}))
+    T
+
+    pub fn while_statement(&mut self, while_keyword: Token, condition: ExprID, body: Body) -> &Stmt{
+        self.stmt_of_kind(StmtKind::While(whileStmt{while_keyword, condition, body,}))
+    }
+
+    pub fn block_statement(&mut self, left_brace:: Token, statements: Vec<StmtID>, right_brace: token) -> &Expr {
+        self.expr_from_kind(ExprKind::Block(BlockExpr{left_brace, stmts: statements, right_brace}))
+    }
+
+    pub fn return_statement(&mut self, return_statement: Token, return_value: Option<ExprID>) -> &Stmt{
+        self.stmt_of_kind(StmtKind::Return(ReturnStmt{return_statement, return_value,}))
+    }
+
+    pub fn func_item(&mut self, func_keyword:Token, identifier: Token, parameters: Vec<FuncDeclParameter>, body: Body, return_type: Option<FunctionReturnTypeSyntax>, function_idx: FunctionIdx,) -> &Item{
+        return self.item_from_kind(ItemKind::Function(FuncDeclaration{
+            func_keyword, identifier, parameters, body, return_type, idx: function_idx
+        }))
+    }
+
+
+    pub fn item_from_kind(&mut self, kind: ItemKind) -> &Item{
+        let item = Item::new(kind, ItemID::new(0))
+        let id = self.items.push(item);
+        self.item[id].id = id;
+        &self.item[id]
+    }
     
+    pub fn expr_from_kind(&mut self, kind: ExprKind) -> &Expr{
+        let expr = Expr::new(kind, ItemID::new(0), Type::Unresolved);
+        let id = self.expressions.push(expr);
+        self.expressions[id].id = id;
+        &self.expressions[id]
+    }
+
+    pub fn number_expression(&mut self, token: Token, number: i64) -> &Expr{
+        self.expr_from_kind(ExprKind::Number(NumberExpr{number, token}))
+    }
+
+    pub fn binary_expression(&mut self, operator: BinOperator, left: ExprID, right: ExprID) -> &Expr{
+        self.expr_from_kind(ExprKind::Binary(BinaryExpr{operator, left, right}))
+    }
+
+    pub fn parenthesized_expression(&mut self, left_paren: Token, expression: ExprID, right_paren: Token) -> &Expr{
+        self.expr_from_kind(ExprKind::Parenthesized(ParenthesizedExpr{inner: expression,left_paren , right_paren}))
+    }
+
+    pub fn variable_expression(&mut self, identifier: Token) -> &Expr{
+        self.expr_from_kind(ExprKind::Variable(VariableExpr{identifier, variable_idx: VariableIdx::new(0)}))
+    }
+
+    pub fn unary_expression(&mut self, operator: UnOperator, operand: ExprID) -> &Expr{
+        self.expr_from_kind(ExprKind::Unary(UnaryExpr{operator, operand}))
+    }
+
+    pub fn assignment_expression(&mut self, identifier: Token, equals: Token, expression: ExprID) -> &Expr{
+        self.expr_from_kind(ExprKind::  )
+    }
 }
