@@ -177,6 +177,14 @@ impl Ast{
     }
 
     pub fn assignment_expression(&mut self, identifier: Token, equals: Token, expression: ExprID) -> &Expr{
-        self.expr_from_kind(ExprKind::  )
+        self.expr_from_kind(ExprKind::Assignment(AssignExpr{identifier, equals, expression, variable_idx: VariableIdx(0),}) )
+    }
+
+    pub fn boolean_expression(&mut self, token: Token, value: bool) -> &Expr{
+        self.expr_from_kind(ExprKind::Boolean(BoolExpr{token, value}))
+    }
+
+    pub fn call_expression(&mut self, callee: Token, left_paren: Token, arguements: Vec<ExprID>, right_paren: Token) -> &Expr{
+        self.expr_from_kind(ExprKind::Call(callexpr{callee,  arguements,left_paren, right_paren, function_idx: FunctionIdx::unreachable(),}))
     }
 }
