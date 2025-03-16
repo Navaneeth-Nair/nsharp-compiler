@@ -169,7 +169,7 @@ impl Ast{
     }
 
     pub fn variable_expression(&mut self, identifier: Token) -> &Expr{
-        self.expr_from_kind(ExprKind::Variable(VariableExpr{identifier, variable_idx: VariableIdx::new(0)}))
+        self.expr_from_kind(ExprKind::Variable(VariablevisualieExpr{identifier, variable_idx: VariableIdx::new(0)}))
     }
 
     pub fn unary_expression(&mut self, operator: UnOperator, operand: ExprID) -> &Expr{
@@ -187,4 +187,126 @@ impl Ast{
     pub fn call_expression(&mut self, callee: Token, left_paren: Token, arguements: Vec<ExprID>, right_paren: Token) -> &Expr{
         self.expr_from_kind(ExprKind::Call(callexpr{callee,  arguements,left_paren, right_paren, function_idx: FunctionIdx::unreachable(),}))
     }
+
+    pub fn error_expression(&mut self, span:TextSpan, ) -> &Expr {
+        self.expr_from_kind(ExprKind::Error(span))
+    }
+
+    pub fn visit(&mut self, visitor: &mut dyn ASTVisitor){
+        for item in self.items.clone().iter(){
+            visitor.visit_item(self, item.id);
+        }
+    }
+
+    pub fn visualize(&mut self) -> (){
+        let mut printer = ASTPrinter::new();
+        self.visit(&mut printer);
+        println!("{}", printer.result);
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct Item{
+    pub id: ItemID,
+    pub kind: ItemKind
+}
+
+impl Item{
+    pub fn new(kind: ItemKind, id:ItemID) -> Self{
+        Self(kind, id)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum ItemKind{
+    Stmt(StmtID),
+    Function(FuncDeclaration),
+}
+
+#[derive(Debug, Clone)]
+pub enum StmtKind{
+    Expr(ExprID),
+    Let(LetStmt),
+    While(WhileStmt),
+    Return(ReturnStmt),
+}
+
+#[derive(Debug, Clone)]
+pub struct ReturnStmt{
+    pub return_keyword: Token;
+    pub return_value: Option<ExprID>;
+}
+
+pub struct StaticTypeAnnotation{
+    pub fn new(colon: Token, type_name: Token) -> Self{
+        Self(colon, type_name)  
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct FuncDeclParameter{
+    pub identifier: Token,
+    pub type_annotation: StaticTypeAnnotation,
+}
+
+
+pub struct FunctionReturnTypeSyntaxpub {
+    pub fn new(arrow: Token, type_name: Token) -> Self{
+        Self(arrow, type_name)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct FuncDeclaration{
+    pub func_keyword: Token,
+    pub identifier: Token,
+    pub parameters: Vec<FuncDeclParameter>,
+    pub body: Body,
+    pub return_type: Option<FunctionReturnTypeSyntax>,
+    pub idx: FunctionIdx,
+}
+
+#[derive(Debug, Clone)]
+pub struct WhileStmt{
+    pub while_keyword: Token,
+    pub condition: ExprID,
+    pub body: Body,
+}
+
+pub struct BlockExpr{
+    pub left_brace: Token,
+    pub stmt: Vec<StmtID>,
+    pub right_brace: Token
+}
+
+impl BlockExpr{
+    pub fn returning_statements(&self, ast: &Ast) -> Option<ExprID>{
+        if let Some(last_stmt) = self.stmts.last() {
+            let stmt = ast.query_stmt(*last_stmt);
+            if let StmtKind::Expr(exprid) = &stmt.kind{
+                return Some(*exprid);
+            }
+        }
+        None
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ElseBranch{
+    pub else_key: Token,
+    pub body: Body,
+}
+
+impl ElseBranch{
+    pub fn new(else_keyword: Token, body: Body) -> Self{
+        ElseBranch{else_key, body}
+    }
+}
+
+pub fn new(else_keyword: Token, body: Body)
+pub struct IfExpr{
+    pub if_keyword: Token,
+    pub condition: ExprID,
+    pub then_branch: Body,
+    pub else_branch: Option<ElseBranch>
 }

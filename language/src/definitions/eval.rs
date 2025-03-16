@@ -50,7 +50,7 @@ impl Frames{
 
     fn push(&mut self){
         self.frames.push(Frame::new());
-    }
+    
 
     fn pop(&mut self){
         self.frames.pop();
